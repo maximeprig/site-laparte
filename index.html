@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Thème clair uniquement : évite que certains navigateurs mobiles assombrissent le site de force -->
+  <meta name="color-scheme" content="only light">
+  <!-- Aperçu privé : ne pas indexer -->
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#23272b">
+  <title>L’Aparté – Cuisine maison du midi à Hérouville-Saint-Clair</title>
+  <meta name="description" content="L’Aparté, restaurant de cuisine maison à Hérouville-Saint-Clair. Formule du jour à 18,90 €, service rapide le midi, salle privatisable le soir.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231a7ea6'/%3E%3Ctext x='32' y='47' font-family='Georgia,serif' font-size='42' font-weight='700' text-anchor='middle' fill='white'%3EA%3C/text%3E%3C/svg%3E">
+
+  <!--
+    ============================================================
+    MODÈLE DE SITE VITRINE – RESTAURANT (une page, sans framework)
+    ------------------------------------------------------------
+    • Textes à compléter : cherchez « [à compléter] » et « [prix] ».
+    • Charte graphique : variables CSS de la section 0.
+    • Photos : dossier images/ (les fichiers d’origine sont dans
+      images/originaux/). Remplacer en gardant les mêmes noms.
+      facade-flou.jpg = mini-version floue de la façade (arrière-plan
+      du haut de page) : à régénérer si la photo de façade change.
+    • Sections : 1 Haut de page · 2 Points forts · 3 Équipe ·
+      4 Carte · 5 Privatisation · 6 Galerie · 7 Avis ·
+      8 Infos & plan · 9 Pied de page.
+    • Avis : vrais avis Google recopiés (note, nombre d’avis, 3 avis) ;
+      à actualiser de temps en temps (voir le commentaire de la section 7).
+    • Crédit « Réalisé par… » : pied de page (classe .foot-credit).
+    • Pages légales : mentions-legales.html et
+      politique-de-confidentialite.html (vides pour l’instant,
+      contenu à fournir par le restaurant).
+    ============================================================
+  -->
+
+  <!-- Le script ajoute la classe « js » : les animations ne cachent jamais le contenu si le script échoue -->
+  <script>document.documentElement.classList.add('js');</script>
+
+  <!-- Polices : Fraunces (titres, chaleureuse) + DM Sans (texte) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght,SOFT@9..144,600..800,100&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="images/facade.jpg" fetchpriority="high">
+
+  <style>
+    /* =========================================================
+       0. VARIABLES — la charte graphique se règle ici
+       Couleurs tirées des photos : turquoise des chaises et du
+       logo, noir de la façade, bois clair. À ajuster si besoin.
+       ========================================================= */
+    :root {
+      --bg: #fbf6ee;            /* crème */
+      --bg-alt: #f1e6d5;        /* sable */
+      --ink: #22201e;           /* texte */
+      --muted: #665d55;         /* texte secondaire */
+      --accent: #1a7ea6;        /* turquoise */
+      --accent-dark: #13607f;
+      --accent-light: #2392bf;
+      --accent-soft: #dcecf3;
+      --deep: #23272b;          /* noir de la façade */
+      --gold: #e6b06a;          /* bois clair */
+      --line: rgba(34, 32, 30, .12);
+      --radius: 20px;
+      --shadow: 0 14px 34px rgba(34, 32, 30, .10);
+      --font-title: "Fraunces", Georgia, serif;
+      --font-text: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --ease: cubic-bezier(.2, .7, .2, 1);
+    }
+
+    /* =========================================================
+       1. BASE
+       ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font-text);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: clip;
+    }
+    img { display: block; max-width: 100%; }
+    h1, h2, h3 { font-family: var(--font-title); line-height: 1.1; margin: 0 0 .5em; letter-spacing: -.01em; }
+    h2 { font-size: clamp(2rem, 6.5vw, 3.2rem); font-weight: 700; }
+    p { margin: 0 0 1em; }
+    a { color: inherit; }
+    address { font-style: normal; }
+    ::selection { background: var(--accent); color: #fff; }
+    a:focus-visible, .btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+    .wrap { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
+    section { padding: 4.5rem 0; scroll-margin-top: 4.5rem; }
+    .section-head { max-width: 640px; margin-bottom: 2rem; }
+    .lead { font-size: 1.15rem; color: var(--muted); max-width: 56ch; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .6rem; margin-bottom: .8rem;
+      font-size: .8rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--accent-dark);
+    }
+    .eyebrow::before { content: ""; width: 28px; height: 2px; background: currentColor; opacity: .6; }
+
+    /* Marqueur des textes encore à renseigner */
+    .todo {
+      background: rgba(230, 176, 106, .38); color: var(--ink);
+      padding: .05em .45em; border-radius: 6px; font-style: normal; font-weight: 500;
+      box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    }
+    .dark .todo { background: rgba(230, 176, 106, .2); color: var(--gold); }
+
+    /* Icônes (sprite SVG en haut du <body>) */
+    .ico {
+      width: 1.25em; height: 1.25em; flex: none;
+      fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .badge {
+      flex: none; width: 44px; height: 44px; border-radius: 14px;
+      display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-dark);
+    }
+    .badge .ico { width: 22px; height: 22px; }
+
+    /* Lien d’accès rapide au contenu (clavier) */
+    .skip {
+      position: absolute; left: 1rem; top: -4rem; z-index: 100;
+      background: #fff; color: var(--ink); padding: .6rem 1rem; border-radius: 8px; transition: top .2s;
+    }
+    .skip:focus { top: 1rem; }
+
+    /* Boutons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+      padding: .95rem 1.5rem; border-radius: 999px; border: 2px solid transparent;
+      font: 700 1rem/1 var(--font-text); text-decoration: none; cursor: pointer; white-space: nowrap;
+      transition: transform .25s var(--ease), box-shadow .25s var(--ease), background-color .25s, color .25s, border-color .25s;
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(0, 0, 0, .22); }
+    .btn:active { transform: translateY(-1px); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-dark); }   /* plus foncé : le texte blanc reste bien lisible */
+    .btn-ghost { border-color: rgba(255, 255, 255, .85); color: #fff; background: rgba(255, 255, 255, .06); }
+    .btn-ghost:hover { background: rgba(255, 255, 255, .2); }
+    .btn-outline { border-color: var(--accent-dark); color: var(--accent-dark); background: transparent; }
+    .btn-outline:hover { background: var(--accent-dark); color: #fff; }
+    .btn-light { background: #fff; color: var(--accent-dark); }
+    .btn-light:hover { background: var(--accent-soft); }
+    .btn-sm { padding: .7rem 1.2rem; font-size: .92rem; }
+
+    /* =========================================================
+       2. BARRES FIXES (apparaissent après le haut de page)
+       - ordinateur : barre de navigation en haut
+       - mobile : bouton d’appel en bas
+       ========================================================= */
+    .topbar {
+      position: fixed; inset: 0 0 auto 0; z-index: 60; display: none; align-items: center; gap: 2rem;
+      padding: .8rem max(1.25rem, calc((100% - 1120px) / 2));
+      background: rgba(35, 39, 43, .92); color: #fff;
+      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+      transform: translateY(-100%); visibility: hidden;
+      transition: transform .4s var(--ease), visibility .4s;
+    }
+    .topbar .brand { margin-right: auto; font: 800 1.5rem var(--font-title); text-decoration: none; color: var(--gold); }
+    .topbar ul { display: flex; gap: 1.6rem; list-style: none; margin: 0; padding: 0; }
+    .topbar ul a {
+      text-decoration: none; font-weight: 500; font-size: .95rem; opacity: .85; padding: .3rem 0;
+      border-bottom: 2px solid transparent; transition: opacity .2s, border-color .2s;
+    }
+    .topbar ul a:hover, .topbar ul a[aria-current] { opacity: 1; border-color: var(--gold); }
+
+    .callbar {
+      position: fixed; inset: auto 0 0 0; z-index: 60;
+      padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom));
+      background: rgba(251, 246, 238, .95); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+      box-shadow: 0 -6px 20px rgba(0, 0, 0, .12);
+      transform: translateY(110%); visibility: hidden;
+      transition: transform .4s var(--ease), visibility .4s;
+    }
+    .callbar .btn { width: 100%; }
+    .past-hero .topbar, .past-hero .callbar { transform: none; visibility: visible; }
+
+    /* =========================================================
+       3. HAUT DE PAGE (plein écran)
+       Mobile : la façade en haut, fondue dans le noir, texte dessous.
+       Ordinateur : texte à gauche, photo en arche à droite.
+       La photo est affichée à sa taille réelle (jamais étirée en plein
+       écran) pour rester nette ; l’arrière-plan est une version floue.
+       ========================================================= */
+    .hero {
+      position: relative; isolation: isolate; overflow: hidden;
+      min-height: 100vh; min-height: 100svh;
+      display: flex; align-items: flex-end;
+      background: var(--deep); color: #fff;
+    }
+    .hero-bg {                                  /* arrière-plan flou : mini-image agrandie (léger, sans filtre coûteux) */
+      position: absolute; inset: 0; z-index: -4; opacity: .6;
+      background: url("images/facade-flou.jpg") center / cover no-repeat;
+    }
+    .hero::before {                             /* dégradé de lisibilité */
+      content: ""; position: absolute; inset: 0; z-index: -2;
+      background: linear-gradient(to bottom, rgba(35, 39, 43, .35) 0%, rgba(35, 39, 43, 0) 18%, rgba(35, 39, 43, .72) 58%, var(--deep) 86%);
+    }
+    .hero::after {                              /* léger grain « pellicule » */
+      content: ""; position: absolute; inset: 0; z-index: -1; opacity: .16; mix-blend-mode: overlay; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .hero-photo {                               /* mobile : en haut, fondue vers le bas */
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: -3; margin: 0;
+      width: min(100%, 480px); aspect-ratio: 3 / 4;
+      -webkit-mask-image: linear-gradient(#000 0%, #000 55%, transparent 98%);
+      mask-image: linear-gradient(#000 0%, #000 55%, transparent 98%);
+    }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+
+    .hero-grid { width: min(1120px, 100% - 2.5rem); margin-inline: auto; padding-bottom: 2rem; }
+    .hero-copy { position: relative; }
+    .kicker {
+      margin: 0 0 .9rem; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--gold);
+    }
+    .hero h1 { font-size: clamp(3.8rem, 20vw, 6rem); font-weight: 800; margin-bottom: .12em; line-height: 1; }
+    .hero h1 em { font-style: normal; color: var(--gold); }
+    .tagline { font-size: clamp(1.1rem, 4.4vw, 1.5rem); max-width: 28ch; margin-bottom: 1.6rem; line-height: 1.4; }
+    .actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+    .actions .btn { flex: 1 1 150px; }
+    .hero-hours { display: flex; align-items: center; gap: .55rem; margin: 1.2rem 0 0; font-size: .95rem; opacity: .9; }
+    .hero-hours .ico { color: var(--gold); }
+
+    /* Entrée en douceur au chargement */
+    .js .hero-copy > * { animation: rise .9s var(--ease) backwards; }
+    .js .hero-copy > :nth-child(2) { animation-delay: .08s; }
+    .js .hero-copy > :nth-child(3) { animation-delay: .16s; }
+    .js .hero-copy > :nth-child(4) { animation-delay: .24s; }
+    .js .hero-copy > :nth-child(5) { animation-delay: .32s; }
+    .js .hero-photo { animation: fade 1.2s ease backwards; }
+    @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+    /* =========================================================
+       4. POINTS FORTS (bandeau)
+       ========================================================= */
+    .ribbon { background: var(--accent-dark); color: #fff; }
+    .ribbon ul { list-style: none; margin: 0 auto; padding: 1.2rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.2rem; }
+    .ribbon li { display: flex; align-items: center; gap: .7rem; font-weight: 700; font-size: .95rem; line-height: 1.25; }
+    .ribbon .ico { width: 1.7rem; height: 1.7rem; color: var(--gold); }
+
+    /* =========================================================
+       5. ÉQUIPE & ESPRIT DU LIEU
+       ========================================================= */
+    .equipe-grid { display: grid; gap: 2.2rem; align-items: center; }
+    .team { display: grid; gap: 1rem; }
+    .person {
+      display: flex; align-items: center; gap: 1.1rem; padding: 1.3rem 1.4rem;
+      background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+      transition: transform .3s var(--ease);
+    }
+    .person:hover { transform: translateY(-4px); }
+    .avatar {
+      flex: none; width: 68px; height: 68px; border-radius: 50%; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark)); color: #fff; font: 700 1.9rem var(--font-title);
+    }
+    .person .role { display: block; font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-dark); }
+    .person h3 { font-size: 1.35rem; margin: .1rem 0 .3rem; }
+    .person p { margin: 0; color: var(--muted); font-size: .98rem; line-height: 1.45; }
+
+    /* =========================================================
+       6. LA CARTE
+       ========================================================= */
+    .carte { background: var(--bg-alt); }
+    .formule {
+      position: relative; overflow: hidden; display: grid; gap: .8rem; align-items: center;
+      margin-bottom: 1.2rem; padding: 1.8rem 1.6rem; border-radius: var(--radius);
+      background: var(--deep); color: #fff; box-shadow: var(--shadow);
+    }
+    .formule::before {                          /* motif « claustra » en bois, comme dans la salle */
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(70% 120% at 100% 0%, rgba(26, 126, 166, .5), transparent 65%),
+                  repeating-linear-gradient(90deg, rgba(255, 255, 255, .045) 0 2px, transparent 2px 30px);
+    }
+    .formule > * { position: relative; }
+    .formule .tag {
+      display: inline-block; margin-bottom: .7rem; padding: .3rem .85rem; border-radius: 999px;
+      background: var(--accent); color: #fff; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    }
+    .formule h3 { font-size: clamp(1.6rem, 5vw, 2.3rem); margin: 0; }
+    .formule-price { font: 800 clamp(3.2rem, 14vw, 4.8rem)/1 var(--font-title); color: var(--gold); white-space: nowrap; }
+
+    .carte-grid { display: grid; gap: 1.2rem; }
+    .menu-stack { display: grid; gap: 1.2rem; align-content: start; }
+    .menu-card {
+      display: flex; flex-direction: column; padding: 1.5rem 1.4rem;
+      background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 6px 18px rgba(34, 32, 30, .06);
+    }
+    .menu-card header { display: flex; align-items: center; gap: .85rem; margin-bottom: .6rem; }
+    .menu-card h3 { font-size: 1.4rem; margin: 0; }
+    .menu-card .note { display: block; font-size: .88rem; color: var(--muted); }
+    .menu-card header .price { margin-left: auto; }
+    .menu-list { list-style: none; margin: 0; padding: 0; flex: 1; display: flex; flex-direction: column; }
+    .menu-list li { flex: 1; display: flex; align-items: center; gap: .75rem; padding: .75rem 0; border-top: 1px dashed var(--line); font-weight: 500; }
+    .menu-list li:first-child { border-top: 0; }
+    .menu-list .ico { color: var(--accent); width: 1.4rem; height: 1.4rem; }
+    .leader { flex: 1; border-bottom: 2px dotted rgba(34, 32, 30, .25); transform: translateY(.3em); }
+
+    /* =========================================================
+       7. PRIVATISATION DE LA SALLE
+       ========================================================= */
+    .prive { position: relative; isolation: isolate; overflow: hidden; background: var(--deep); color: #fff; }
+    .prive::before {
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background: radial-gradient(60% 90% at 95% 0%, rgba(26, 126, 166, .5), transparent 70%),
+                  repeating-linear-gradient(90deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 34px);
+    }
+    .prive-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.2rem; align-items: center; }
+    .prive .eyebrow { color: var(--gold); }
+    .prive .lead { color: rgba(255, 255, 255, .82); }
+    .prive .small { margin: 1.1rem 0 0; font-size: .95rem; opacity: .85; }
+    .events { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
+    .events li {
+      display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.3rem; border-radius: var(--radius);
+      background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .14);
+      font-weight: 700; font-size: 1.1rem; transition: background .3s, transform .3s var(--ease);
+    }
+    .events li:hover { background: rgba(255, 255, 255, .12); transform: translateX(6px); }
+    .events .badge { background: rgba(230, 176, 106, .18); color: var(--gold); }
+
+    /* =========================================================
+       8. GALERIE (3 photos)
+       ========================================================= */
+    .galerie-grid { display: grid; gap: 1rem; }
+    .shot { position: relative; margin: 0; overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--radius); background: #cfc7bb; box-shadow: var(--shadow); }
+    .shot img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease); }
+    .shot:hover img { transform: scale(1.05); }
+    .shot figcaption {
+      position: absolute; left: .8rem; bottom: .8rem; padding: .35rem .85rem; border-radius: 999px;
+      background: rgba(255, 255, 255, .93); color: var(--ink); font-size: .85rem; font-weight: 700;
+    }
+
+    /* =========================================================
+       9. AVIS (bandeau turquoise : note moyenne + avis clients)
+       Vrais avis Google : voir le commentaire de la section 7 du HTML.
+       Mobile : les avis défilent d’un geste ; dès 800 px : 3 colonnes.
+       ========================================================= */
+    .avis { position: relative; isolation: isolate; overflow: hidden; background: var(--accent-dark); color: #fff; }
+    .avis::before {                             /* lueur + motif « claustra » en bois, comme la formule et la privatisation */
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background: radial-gradient(55% 80% at 0% 0%, rgba(35, 146, 191, .6), transparent 70%),
+                  radial-gradient(45% 70% at 100% 100%, rgba(35, 39, 43, .5), transparent 70%),
+                  repeating-linear-gradient(90deg, rgba(255, 255, 255, .04) 0 2px, transparent 2px 34px);
+    }
+    .avis .eyebrow { color: #f3d3a1; }          /* or pâle : lisible sur le turquoise */
+    .avis .lead { color: rgba(255, 255, 255, .86); }
+    .avis .todo { background: #f3d3a1; color: var(--ink); }   /* marqueur plein, pour rester lisible sur le turquoise */
+    .avis-head { display: grid; gap: 1.6rem; margin-bottom: 2rem; }
+    .avis-head .section-head { margin: 0; }
+
+    /* Étoiles : <span class="stars" style="--note:4.5" role="img" aria-label="4,5 sur 5"></span>
+       --note va de 0 à 5 (décimales permises) ; à 0, les cinq étoiles restent vides. */
+    .stars {
+      --star-on: #f5b335; --star-off: rgba(34, 32, 30, .16);
+      --star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E");
+      display: inline-block; flex: none; width: 5em; height: 1em; font-size: 1.2rem;
+      background: linear-gradient(90deg, var(--star-on) calc(var(--note, 0) / 5 * 100%), var(--star-off) 0);
+      -webkit-mask: var(--star) 0 0 / 1em 1em repeat-x;
+      mask: var(--star) 0 0 / 1em 1em repeat-x;
+    }
+
+    /* Note moyenne */
+    .avis-score {
+      display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; max-width: 440px;
+      padding: 1.5rem 1.6rem; border-radius: var(--radius);
+      background: rgba(255, 255, 255, .09); border: 1px solid rgba(255, 255, 255, .22);
+    }
+    .avis-score .stars { --star-off: rgba(255, 255, 255, .32); font-size: 1.8rem; }
+    .avis-score .btn { align-self: stretch; white-space: normal; text-align: center; line-height: 1.25; }
+    .score-label { margin: 0; font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; opacity: .85; }
+    .score-line { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1.1rem; }
+    .score-value { margin: 0; font: 800 clamp(2.4rem, 10vw, 3.6rem)/1.1 var(--font-title); }
+    .score-value small { margin-left: .25rem; font: 500 1.15rem var(--font-text); opacity: .85; }
+    .score-count { margin: 0 0 .8rem; opacity: .92; }
+
+    /* Avis : rangée qui défile sur mobile (la carte suivante dépasse, pour inviter à glisser) */
+    .avis-list {
+      display: flex; gap: 1rem; margin: 0 -1.25rem; padding: .6rem 1.25rem 2rem;
+      overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 1.25rem;
+      overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .45) transparent;
+    }
+    .avis-list:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+    .avis-card {
+      position: relative; isolation: isolate; flex: 0 0 min(84%, 22rem); scroll-snap-align: start; margin: 0;
+      display: flex; flex-direction: column; gap: .9rem; padding: 1.5rem 1.4rem 1.3rem;
+      background: #fff; color: var(--ink); border-radius: var(--radius); box-shadow: 0 10px 24px rgba(0, 0, 0, .2);
+      transition: transform .3s var(--ease);
+    }
+    .avis-card:hover { transform: translateY(-4px); }
+    .avis-card::before {                        /* grand guillemet décoratif, derrière le texte */
+      content: "“"; content: "“" / ""; position: absolute; z-index: -1; top: .3rem; right: 1.1rem;
+      font: 800 5.5rem/1 var(--font-title); color: var(--accent-soft); pointer-events: none;
+    }
+    .avis-card blockquote { flex: 1; margin: 0; font-size: 1.05rem; line-height: 1.55; }
+    .avis-card blockquote p { margin: 0; }
+    .avis-card figcaption { display: flex; align-items: center; gap: .8rem; padding-top: .9rem; border-top: 1px dashed var(--line); line-height: 1.3; }
+    .avis-card figcaption strong, .avis-card figcaption small { display: block; }
+    .avis-card figcaption small { margin-top: .15rem; color: var(--muted); font-size: .85rem; }
+    .avis-card .badge { font: 700 1rem var(--font-title); letter-spacing: .02em; }   /* initiales du client */
+
+    @media (max-width: 799px) {                 /* rangée qui défile : les cartes restent visibles (pas d’apparition au scroll) */
+      .js .avis-list .reveal, .js .avis-list .reveal.visible { opacity: 1; animation: none; }
+    }
+
+    /* =========================================================
+       10. HORAIRES, ADRESSE & PLAN
+       ========================================================= */
+    .infos { background: var(--bg-alt); }
+    .infos-grid { display: grid; gap: 1.4rem; }
+    .infos-card {
+      display: flex; flex-direction: column; gap: 1.4rem; padding: 1.6rem;
+      background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    .info-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
+    .info-rows li { display: flex; gap: .9rem; }
+    .info-rows .badge { width: 40px; height: 40px; border-radius: 12px; }
+    .info-rows strong { display: block; line-height: 1.3; }
+    .info-rows span, .info-rows address, .info-rows a { color: var(--muted); }
+    .info-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: auto; }
+    .map { min-height: 340px; overflow: hidden; border-radius: var(--radius); background: #e8e1d6; box-shadow: var(--shadow); }
+    .map iframe { display: block; width: 100%; height: 100%; min-height: 340px; border: 0; }
+
+    /* =========================================================
+       11. PIED DE PAGE
+       ========================================================= */
+    footer { background: var(--deep); color: #e7dfd4; padding: 3rem 0 calc(6.5rem + env(safe-area-inset-bottom)); }
+    .foot-grid { display: grid; gap: 1.8rem; }
+    footer .logo { font: 800 2rem var(--font-title); color: var(--gold); margin-bottom: .3rem; }
+    footer h3 { font: 700 .8rem var(--font-text); letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: .6rem; }
+    footer p { margin: 0 0 .6rem; }
+    footer a { font-weight: 700; color: #fff; }
+    .foot-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem; margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid rgba(255, 255, 255, .14); font-size: .85rem; opacity: .8; }
+    .foot-bottom a { font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: .3rem; padding-block: .3rem; }
+    .foot-bottom a:hover, .foot-bottom a:focus-visible { text-decoration: underline; }
+    .foot-legal { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; }
+    .foot-credit { flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: .15rem 1.2rem; margin: 0; }
+    .foot-credit a { display: inline; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+    .foot-note { flex: 1 0 100%; opacity: .75; }
+
+    /* =========================================================
+       12. ANIMATIONS (apparition au scroll)
+       ========================================================= */
+    .js .reveal { opacity: 0; }
+    .js .reveal.visible { opacity: 1; animation: rise .8s var(--ease) backwards; animation-delay: var(--d, 0s); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .js .reveal { opacity: 1; }
+      .js .reveal.visible, .js .hero-copy > *, .js .hero-photo { animation: none; }
+      .btn, .person, .events li, .shot img, .avis-card { transition: none; }
+    }
+
+    /* Très petits téléphones (≤ 359 px) */
+    @media (max-width: 359px) {
+      .kicker { font-size: .66rem; letter-spacing: .06em; }
+      .btn { max-width: 100%; white-space: normal; text-align: center; line-height: 1.2; padding-inline: 1.1rem; }   /* un long bouton passe sur 2 lignes au lieu de déborder */
+    }
+
+    /* =========================================================
+       13. TABLETTE (≥ 560 px) : textes centrés dans le haut de page
+       ========================================================= */
+    @media (min-width: 560px) and (max-width: 899px) {
+      .hero-copy { text-align: center; }
+      .tagline { margin-inline: auto; }
+      .actions, .hero-hours { justify-content: center; }
+      .actions .btn { flex: 0 0 auto; }
+      .galerie-grid { grid-template-columns: 1fr 1fr; }
+      .galerie-grid .shot { aspect-ratio: 4 / 5; }
+      .galerie-grid .shot:first-child { grid-column: 1 / -1; aspect-ratio: 16 / 9; }
+    }
+
+    /* =========================================================
+       14. ORDINATEUR (≥ 800 px puis ≥ 900 px)
+       ========================================================= */
+    @media (min-width: 800px) {
+      section { padding: 6.5rem 0; }
+      .ribbon ul { grid-template-columns: repeat(4, 1fr); padding: 1.6rem 0; }
+      .formule { grid-template-columns: 1fr auto; padding: 2.2rem 2.6rem; }
+      .carte-grid { grid-template-columns: 1fr 1fr; align-items: stretch; }
+      .galerie-grid { grid-template-columns: 1.35fr 1fr 1fr; height: 430px; }
+      .shot, .galerie-grid .shot { aspect-ratio: auto; }
+      .foot-grid { grid-template-columns: 1.2fr 1fr 1fr; }
+      .avis-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin: 0; padding: 0; overflow: visible; }
+      .avis-card { box-shadow: 0 18px 40px rgba(0, 0, 0, .2); }
+    }
+
+    /* Haut de page en deux colonnes : ordinateur, ou téléphone tenu à l’horizontale */
+    @media (min-width: 900px), (min-width: 560px) and (max-height: 520px) and (orientation: landscape) {
+      .hero { align-items: center; }
+      .hero::before {
+        background: radial-gradient(38% 62% at 73% 50%, rgba(26, 126, 166, .34), transparent 72%),
+                    linear-gradient(90deg, rgba(35, 39, 43, .88) 0%, rgba(35, 39, 43, .45) 100%);
+      }
+      .hero-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 4rem; align-items: center; padding: 5rem 0 4rem; }
+      .hero-photo {
+        --photo-h: min(72svh, 38.75rem);        /* hauteur voulue de la photo… */
+        position: relative; top: auto; left: auto; transform: none; z-index: 0; justify-self: center;
+        width: min(100%, calc(var(--photo-h) * .75)); height: auto; aspect-ratio: 3 / 4;   /* …la largeur s’en déduit, sans jamais dépasser sa colonne */
+        border-radius: 999px 999px 28px 28px; overflow: hidden;
+        -webkit-mask-image: none; mask-image: none;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, .3), 0 0 0 14px rgba(255, 255, 255, .07), 0 40px 80px rgba(0, 0, 0, .5);
+      }
+      .hero-copy { text-align: left; }
+      .tagline { max-width: 30ch; margin-inline: 0; }
+      .actions, .hero-hours { justify-content: flex-start; }
+      .kicker { font-size: .85rem; letter-spacing: .16em; }
+      .hero h1 { font-size: clamp(5rem, 9vw, 8.5rem); }
+      .actions .btn { flex: 0 0 auto; padding: 1.05rem 1.9rem; }
+    }
+
+    /* Grand écran tenu en hauteur (tablette 12,9″ en portrait) : le haut de page ne s’étire pas sur toute la hauteur */
+    @media (min-width: 900px) and (orientation: portrait) {
+      .hero { min-height: min(100vh, 56rem); min-height: min(100svh, 56rem); }
+    }
+
+    /* Écran très peu haut (téléphone à l’horizontale) : tout doit tenir sans défiler */
+    @media (min-width: 560px) and (max-height: 520px) and (orientation: landscape) {
+      .hero-grid { gap: 2rem; padding: 1.2rem 0; }
+      .hero-photo { --photo-h: calc(100svh - 2.4rem); box-shadow: 0 0 0 1px rgba(255, 255, 255, .3), 0 20px 40px rgba(0, 0, 0, .5); }
+      .kicker { font-size: .7rem; margin-bottom: .5rem; }
+      .hero h1 { font-size: clamp(3rem, 15vh, 4.6rem); }
+      .tagline { font-size: 1rem; margin-bottom: 1rem; }
+      .actions .btn { padding: .8rem 1.3rem; font-size: .95rem; }
+      .hero-hours { margin-top: .8rem; font-size: .85rem; }
+      .callbar { padding-block: .45rem; }
+      .callbar .btn { padding-block: .7rem; }
+    }
+
+    @media (min-width: 900px) {
+      body { font-size: 1.1rem; }
+      .topbar { display: flex; }
+      .callbar { display: none; }
+      footer { padding-bottom: 3rem; }
+
+      .equipe-grid { grid-template-columns: 1.1fr 1fr; gap: 4rem; }
+      .prive-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 4rem; }
+      .infos-grid { grid-template-columns: 1fr 1.25fr; }
+      .avis-head { grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 3rem; }
+      .avis-score { width: 340px; }
+    }
+
+    /* Très grands écrans (≥ 1800 px) : on agrandit un peu tout pour ne pas faire « petit » */
+    @media (min-width: 1800px) {
+      html { font-size: 118%; }
+      .wrap, .hero-grid { width: min(1320px, 100% - 2.5rem); }
+      .topbar { padding-inline: max(1.25rem, calc((100% - 1320px) / 2)); }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip" href="#contenu">Aller au contenu</a>
+
+  <!-- Icônes : <svg class="ico"><use href="#i-nom"/></svg> -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-nav" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <symbol id="i-utensils" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
+    <symbol id="i-burger" viewBox="0 0 24 24"><path d="M4 11a8 6.5 0 0 1 16 0z"/><path d="M3 14h18"/><path d="M4 17.5h16v.5a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/><path d="M9 8h.01M12 7h.01M15 8.5h.01"/></symbol>
+    <symbol id="i-toast" viewBox="0 0 24 24"><path d="M5 21V12.5a3.5 3.5 0 0 1-1.5-6.4A4 4 0 0 1 7.5 3h9a4 4 0 0 1 4 3.1 3.5 3.5 0 0 1-1.5 6.4V21z"/><path d="M9 10h.01M13.5 8.5h.01M15 13h.01M10 15h.01"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+    <symbol id="i-pot" viewBox="0 0 24 24"><path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/><path d="M7 21h10"/><path d="M19.5 12 22 6"/><path d="M16.25 3c.27.1.8.53.75 1.36-.06.83-.93 1.2-1 2.02-.05.78.34 1.24.73 1.62"/><path d="M11.25 3c.27.1.8.53.74 1.36-.05.83-.93 1.2-.98 2.02-.06.78.33 1.24.72 1.62"/><path d="M6.25 3c.27.1.8.53.75 1.36-.06.83-.93 1.2-1 2.02-.05.78.34 1.24.74 1.62"/></symbol>
+    <symbol id="i-cake" viewBox="0 0 24 24"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3M12 8v3M17 8v3"/><path d="M7 4h.01M12 4h.01M17 4h.01"/></symbol>
+    <symbol id="i-wine" viewBox="0 0 24 24"><path d="M8 22h8"/><path d="M7 10h10"/><path d="M12 15v7"/><path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"/></symbol>
+    <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  </svg>
+
+  <!-- ======================= BARRES FIXES ======================= -->
+  <!-- Navigation (ordinateur) : visible après le haut de page -->
+  <nav class="topbar" aria-label="Navigation principale">
+    <a class="brand" href="#accueil">L’Aparté</a>
+    <ul>
+      <li><a href="#equipe">L’esprit du lieu</a></li>
+      <li><a href="#carte">La carte</a></li>
+      <li><a href="#privatisation">Privatisation</a></li>
+      <li><a href="#galerie">Galerie</a></li>
+      <li><a href="#avis">Avis</a></li>
+      <li><a href="#infos">Infos</a></li>
+    </ul>
+    <a class="btn btn-primary btn-sm" href="tel:+33231949711"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>02&nbsp;31&nbsp;94&nbsp;97&nbsp;11</a>
+  </nav>
+
+  <!-- ======================= 1. HAUT DE PAGE ======================= -->
+  <header class="hero" id="accueil">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="kicker">Restaurant · Hérouville-Saint-Clair</p>
+        <h1>L’<em>Aparté</em></h1>
+        <p class="tagline">La cuisine maison du midi, généreuse et servie sans attendre.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="tel:+33231949711" aria-label="Réserver par téléphone au 02 31 94 97 11"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>Réserver</a>
+          <a class="btn btn-ghost" href="#carte">Voir la carte</a>
+        </div>
+        <p class="hero-hours"><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>Du lundi au samedi, le midi</p>
+      </div>
+      <figure class="hero-photo">
+        <img src="images/facade.jpg" width="774" height="1032" alt="Façade du restaurant L’Aparté" fetchpriority="high">
+      </figure>
+    </div>
+  </header>
+
+  <main id="contenu">
+    <!-- ======================= 2. POINTS FORTS ======================= -->
+    <div class="ribbon">
+      <ul class="wrap" aria-label="Nos points forts">
+        <li><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg>Tout est fait maison</li>
+        <li><svg class="ico" aria-hidden="true"><use href="#i-utensils"/></svg>Assiettes généreuses</li>
+        <li><svg class="ico" aria-hidden="true"><use href="#i-zap"/></svg>Service rapide le midi</li>
+        <li><svg class="ico" aria-hidden="true"><use href="#i-wine"/></svg>Salle privatisable le soir</li>
+      </ul>
+    </div>
+
+    <!-- ======================= 3. ÉQUIPE & ESPRIT DU LIEU ======================= -->
+    <section id="equipe">
+      <div class="wrap equipe-grid">
+        <div class="reveal">
+          <span class="eyebrow">L’esprit du lieu</span>
+          <h2>Une maison où l’on se sent bien</h2>
+          <p class="lead">À L’Aparté, la cuisine est simple, réconfortante et faite maison. Le cadre, à la fois classique, moderne et chaleureux, est pensé pour que chacun s’y sente à l’aise : idéal pour votre pause déjeuner entre collègues.</p>
+        </div>
+        <div class="team">
+          <article class="person reveal">
+            <div class="avatar" aria-hidden="true">C</div>
+            <div>
+              <span class="role">En salle</span>
+              <h3>Carole Leroy</h3>
+              <p>L’accueil et le service.</p>
+            </div>
+          </article>
+          <article class="person reveal">
+            <div class="avatar" aria-hidden="true">A</div>
+            <div>
+              <span class="role">En cuisine</span>
+              <h3>Antoine Verdier</h3>
+              <p>Des plats faits maison, des mijotés aux desserts.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= 4. LA CARTE =======================
+         Prix à renseigner : remplacer chaque [prix]. Pour ajouter une
+         ligne, dupliquer un <li>. -->
+    <section class="carte" id="carte">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">La carte</span>
+          <h2>Ce que l’on vous sert</h2>
+          <p class="lead">Une cuisine maison, des assiettes généreuses et un service rapide.</p>
+        </div>
+
+        <!-- Formule -->
+        <div class="formule reveal">
+          <div>
+            <span class="tag">Formule du jour</span>
+            <h3>Plat + dessert + café</h3>
+          </div>
+          <div class="formule-price">18,90&nbsp;€</div>
+        </div>
+
+        <div class="carte-grid">
+          <article class="menu-card reveal">
+            <header>
+              <span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-utensils"/></svg></span>
+              <h3>À la carte</h3>
+            </header>
+            <ul class="menu-list">
+              <li><svg class="ico" aria-hidden="true"><use href="#i-leaf"/></svg>Salades<i class="leader"></i><span class="todo">[prix]</span></li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-burger"/></svg>Burgers<i class="leader"></i><span class="todo">[prix]</span></li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-toast"/></svg>Bruschettas<i class="leader"></i><span class="todo">[prix]</span></li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-flame"/></svg>Grillades<i class="leader"></i><span class="todo">[prix]</span></li>
+            </ul>
+          </article>
+
+          <div class="menu-stack">
+            <article class="menu-card reveal">
+              <header>
+                <span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-pot"/></svg></span>
+                <div><h3>Plats mijotés</h3><span class="note">Selon les jours</span></div>
+                <span class="price todo">[prix]</span>
+              </header>
+              <ul class="menu-list">
+                <li>Bourguignon</li>
+                <li>Sauté de veau</li>
+                <li>Paupiettes</li>
+              </ul>
+            </article>
+            <article class="menu-card reveal">
+              <header>
+                <span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-cake"/></svg></span>
+                <h3>Desserts maison</h3>
+                <span class="price todo">[prix]</span>
+              </header>
+              <ul class="menu-list">
+                <li>Mousse au chocolat</li>
+                <li>Tiramisu au spéculoos</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= 5. PRIVATISATION ======================= -->
+    <section class="prive dark" id="privatisation">
+      <div class="wrap prive-grid">
+        <div class="reveal">
+          <span class="eyebrow">Le soir, sur réservation</span>
+          <h2>Privatisez la salle le soir</h2>
+          <p class="lead">La salle de L’Aparté est disponible en soirée pour vos événements privés.</p>
+          <a class="btn btn-primary" href="tel:+33231949711"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>Nous appeler : 02&nbsp;31&nbsp;94&nbsp;97&nbsp;11</a>
+          <p class="small">Capacité, menus et tarifs : sur demande, par téléphone.</p>
+        </div>
+        <ul class="events">
+          <li class="reveal"><span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-cake"/></svg></span>Anniversaires</li>
+          <li class="reveal"><span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-wine"/></svg></span>Pots de départ</li>
+          <li class="reveal"><span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-briefcase"/></svg></span>Repas d’entreprise</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ======================= 6. GALERIE ======================= -->
+    <section id="galerie">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">En images</span>
+          <h2>L’ambiance et les assiettes</h2>
+        </div>
+        <div class="galerie-grid">
+          <figure class="shot reveal">
+            <img src="images/salle-1.jpg" width="1030" height="776" loading="lazy" alt="La salle du restaurant, avec ses chaises turquoise et son bar">
+            <figcaption>La salle</figcaption>
+          </figure>
+          <figure class="shot reveal">
+            <img src="images/plat.jpg" width="900" height="1200" loading="lazy" alt="Assiette de viande grillée avec sauce aux champignons, pommes de terre rôties et salade" style="object-position:center 55%">
+            <figcaption>Cuisine maison</figcaption>
+          </figure>
+          <figure class="shot reveal">
+            <img src="images/salle-2.jpg" width="862" height="928" loading="lazy" alt="Banquette et chaises turquoise, tables sombres et cloison en bois dans la salle">
+            <figcaption>Un cadre chaleureux</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= 7. AVIS =======================
+         Vrais avis, recopiés depuis la fiche Google du restaurant : note 4,7 sur
+         49 avis (relevé de novembre 2026). Jamais de faux avis : pour mettre à jour,
+         recopier la note, le nombre d’avis et les avis actuels de la fiche Google.
+         • Note moyenne : texte « 4,7 » + étoiles (--note de 0 à 5, décimales permises,
+           ex. style="--note:4.7") + nombre d’avis.
+         • Chaque avis = un <figure class="avis-card">, à dupliquer pour en ajouter.
+           Texte recopié tel quel (seules les fautes de frappe évidentes sont corrigées),
+           nom abrégé en prénom + initiale, mois de la visite.
+         • Étoiles de chaque avis : non affichées (la note de chaque client n’était pas
+           dans le texte copié). Pour les afficher, ajouter en premier dans la carte :
+           <span class="stars" style="--note:5" role="img" aria-label="Note : 5 sur 5"></span>
+         • Bouton : ouvre la fiche Google du restaurant (recherche). Avec le Place ID,
+           on peut mettre à la place https://search.google.com/local/writereview?placeid=…
+           pour proposer directement « Laisser un avis ». -->
+    <section class="avis" id="avis">
+      <div class="wrap">
+        <div class="avis-head">
+          <div class="section-head reveal">
+            <span class="eyebrow">Avis clients</span>
+            <h2>Ce que disent nos clients</h2>
+            <p class="lead">Les retours de celles et ceux qui se sont déjà installés à notre table.</p>
+          </div>
+          <div class="avis-score reveal">
+            <p class="score-label">Note moyenne</p>
+            <div class="score-line">
+              <p class="score-value">4,7<small>/&nbsp;5</small></p>
+              <span class="stars" style="--note:4.7" role="img" aria-label="Note moyenne : 4,7 sur 5"></span>
+            </div>
+            <p class="score-count">sur 49&nbsp;avis Google</p>
+            <a class="btn btn-light" href="https://www.google.com/maps/search/?api=1&amp;query=L%27Apart%C3%A9%2C%201%20avenue%20de%20la%203e%20Division%20d%27Infanterie%20Britannique%2C%2014200%20H%C3%A9rouville-Saint-Clair" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-star"/></svg>Voir les avis sur Google</a>
+          </div>
+        </div>
+
+        <div class="avis-list" role="region" aria-label="Avis des clients">
+          <figure class="avis-card reveal">
+            <blockquote>
+              <p>«&nbsp;Le service était rapide et efficace, les serveurs tous très aimables&nbsp;!!&nbsp;»</p>
+            </blockquote>
+            <figcaption>
+              <span class="badge" aria-hidden="true">ET</span>
+              <span><strong>Ermeline T.</strong><small>Avis Google · visité en septembre</small></span>
+            </figcaption>
+          </figure>
+          <figure class="avis-card reveal">
+            <blockquote>
+              <p>«&nbsp;J’adore les asperges blanches sauce hollandaise&nbsp;! Un délice. Chaque jeudi… les cuisses de grenouilles j’adore. Et le fabuleux éclair aux chocolats… Chaque jour. Bravo à toute l’équipe.&nbsp;»</p>
+            </blockquote>
+            <figcaption>
+              <span class="badge" aria-hidden="true">FL</span>
+              <span><strong>Fabrice L.</strong><small>Avis Google · visité en juillet</small></span>
+            </figcaption>
+          </figure>
+          <figure class="avis-card reveal">
+            <blockquote>
+              <p>«&nbsp;Une bonne adresse sur Hérouville-Saint-Clair. Intolérante au gluten et lactose, ils ont su adapter leurs plats. Le lieu est par ailleurs facile d’accès, avec une belle terrasse. Je recommande&nbsp;:)&nbsp;»</p>
+            </blockquote>
+            <figcaption>
+              <span class="badge" aria-hidden="true">LS</span>
+              <span><strong>Litho S.</strong><small>Avis Google · visité en juillet</small></span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= 8. HORAIRES, ADRESSE & PLAN ======================= -->
+    <section class="infos" id="infos">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Nous trouver</span>
+          <h2>Horaires et accès</h2>
+        </div>
+        <div class="infos-grid">
+          <div class="infos-card reveal">
+            <ul class="info-rows">
+              <li>
+                <span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg></span>
+                <div><strong>Le midi</strong><span>Du lundi au samedi · <span class="todo">[horaires à compléter]</span></span></div>
+              </li>
+              <li>
+                <span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+                <div><strong>Le soir</strong><span>Sur réservation, pour les événements privés</span></div>
+              </li>
+              <li>
+                <span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+                <div><strong>Dimanche</strong><span class="todo">[à compléter]</span></div>
+              </li>
+              <li>
+                <span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg></span>
+                <div><strong>Adresse</strong><address>1 avenue de la 3e Division d’Infanterie Britannique<br>14200 Hérouville-Saint-Clair</address></div>
+              </li>
+              <li>
+                <span class="badge"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg></span>
+                <div><strong>Téléphone</strong><a href="tel:+33231949711">02&nbsp;31&nbsp;94&nbsp;97&nbsp;11</a></div>
+              </li>
+            </ul>
+            <div class="info-actions">
+              <a class="btn btn-primary" href="tel:+33231949711"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>Réserver</a>
+              <a class="btn btn-outline" href="https://www.google.com/maps/dir/?api=1&amp;destination=1%20avenue%20de%20la%203e%20Division%20d%27Infanterie%20Britannique%2C%2014200%20H%C3%A9rouville-Saint-Clair" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-nav"/></svg>Itinéraire</a>
+            </div>
+          </div>
+          <div class="map reveal">
+            <iframe title="Plan d’accès à L’Aparté" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              src="https://maps.google.com/maps?q=1%20avenue%20de%20la%203e%20Division%20d%27Infanterie%20Britannique%2C%2014200%20H%C3%A9rouville-Saint-Clair&amp;output=embed"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================= 9. PIED DE PAGE ======================= -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <div class="logo">L’Aparté</div>
+          <p>Cuisine maison du midi, à Hérouville-Saint-Clair.</p>
+        </div>
+        <div>
+          <h3>Contact</h3>
+          <p><a href="tel:+33231949711">02&nbsp;31&nbsp;94&nbsp;97&nbsp;11</a></p>
+          <address>1 avenue de la 3e Division d’Infanterie Britannique<br>14200 Hérouville-Saint-Clair</address>
+        </div>
+        <div>
+          <h3>Horaires</h3>
+          <p>Du lundi au samedi, le midi<br>Le soir sur réservation, pour les événements privés</p>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <!-- Pages légales : vides pour l’instant, à remplir avant la mise en ligne -->
+        <nav class="foot-legal" aria-label="Informations légales">
+          <a href="mentions-legales.html">Mentions légales</a>
+          <a href="politique-de-confidentialite.html">Politique de confidentialité</a>
+        </nav>
+        <a href="#accueil"><svg class="ico" aria-hidden="true"><use href="#i-up"/></svg>Haut de page</a>
+        <!-- Crédit du créateur du site -->
+        <p class="foot-credit">
+          <span>Réalisé par <strong>Maxime Prigent</strong></span>
+          <span>Contact : <a href="mailto:maxime.prigent.dev.web@gmail.com">maxime.prigent.dev.web@gmail.com</a></span>
+        </p>
+        <span class="foot-note">Maquette d’aperçu — non définitive</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bouton d’appel (mobile) : apparaît quand « Réserver » du haut de page n’est plus visible -->
+  <div class="callbar">
+    <a class="btn btn-primary" href="tel:+33231949711"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>Réserver : 02&nbsp;31&nbsp;94&nbsp;97&nbsp;11</a>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.documentElement;
+
+      /* 1. Apparition douce des blocs au scroll (décalage progressif entre frères) */
+      const items = [...document.querySelectorAll('.reveal')];
+      if (!('IntersectionObserver' in window)) {
+        items.forEach(el => el.classList.add('visible'));
+      } else {
+        const io = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+        items.forEach(el => {
+          const siblings = [...el.parentNode.children].filter(n => n.classList.contains('reveal'));
+          el.style.setProperty('--d', siblings.indexOf(el) * 90 + 'ms');
+          io.observe(el);
+        });
+      }
+
+      /* 2. Barres fixes : visibles dès que le bouton « Réserver » du haut de page est sorti de l’écran */
+      const actions = document.querySelector('.hero .actions');
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        root.classList.toggle('past-hero', actions.getBoundingClientRect().bottom < 40);
+      };
+      addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+      addEventListener('resize', update);
+      update();
+
+      /* 3. Lien actif dans la navigation (ordinateur) */
+      const links = {};
+      document.querySelectorAll('.topbar ul a[href^="#"]').forEach(a => { links[a.getAttribute('href').slice(1)] = a; });
+      if ('IntersectionObserver' in window) {
+        const spy = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            const link = links[e.target.id];
+            if (!link) return;
+            if (e.isIntersecting) {
+              Object.values(links).forEach(a => a.removeAttribute('aria-current'));
+              link.setAttribute('aria-current', 'true');
+            } else {
+              link.removeAttribute('aria-current');   /* la section quitte la zone centrale (ex. retour en haut de page) */
+            }
+          });
+        }, { rootMargin: '-45% 0px -50% 0px' });
+        Object.keys(links).forEach(id => { const s = document.getElementById(id); if (s) spy.observe(s); });
+      }
+
+      /* 4. Rangée d’avis : atteignable au clavier seulement quand elle défile (mobile / tablette) */
+      const avisList = document.querySelector('.avis-list');
+      if (avisList) {
+        const syncAvis = () => {
+          if (avisList.scrollWidth > avisList.clientWidth + 1) avisList.setAttribute('tabindex', '0');
+          else avisList.removeAttribute('tabindex');
+        };
+        addEventListener('resize', syncAvis);
+        syncAvis();
+      }
+    })();
+  </script>
+</body>
+</html>

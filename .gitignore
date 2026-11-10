@@ -1,0 +1,16 @@
+# Ce qui est publié sur Netlify = tout ce qui est dans ce dépôt.
+# On ne garde donc ici que le site : les fichiers de travail restent sur le PC.
+
+# Papier à imprimer pour le restaurant (document de travail, pas pour le public)
+a-imprimer/
+
+# Photos d'origine : lourdes et inutiles au site (il utilise images/*.jpg optimisées)
+images/originaux/
+
+# Fichiers temporaires et fichiers système
+_verif-pdf.html
+*.log
+*.tmp
+Thumbs.db
+desktop.ini
+.DS_Store

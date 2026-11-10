@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="only light">
+  <!-- Aperçu privé : ne pas indexer -->
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#23272b">
+  <title>Mentions légales – L’Aparté</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231a7ea6'/%3E%3Ctext x='32' y='47' font-family='Georgia,serif' font-size='42' font-weight='700' text-anchor='middle' fill='white'%3EA%3C/text%3E%3C/svg%3E">
+
+  <!--
+    PAGE VIDE POUR L’INSTANT : les mentions légales sont à fournir
+    par le restaurant avant la mise en ligne. Écrire le contenu
+    dans <main>, à la place de « [à compléter] ».
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght,SOFT@9..144,600..800,100&display=swap" rel="stylesheet">
+
+  <style>
+    /* Mêmes couleurs et polices que la page d’accueil */
+    :root {
+      --bg: #fbf6ee; --ink: #22201e; --muted: #665d55;
+      --deep: #23272b; --gold: #e6b06a;
+      --font-title: "Fraunces", Georgia, serif;
+      --font-text: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column;
+      font-family: var(--font-text); font-size: 1.05rem; line-height: 1.6;
+      color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    a:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+    .wrap { width: min(820px, 100% - 2.5rem); margin-inline: auto; }
+
+    /* En-tête */
+    .bar { background: var(--deep); color: #fff; }
+    .bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; }
+    .brand { font: 800 1.6rem var(--font-title); color: var(--gold); text-decoration: none; }
+    .back { font-weight: 500; font-size: .95rem; text-decoration: none; }
+    .back:hover, .back:focus-visible { text-decoration: underline; }
+
+    /* Contenu */
+    main { flex: 1; padding: 4rem 0 5rem; }
+    h1 { font: 700 clamp(2rem, 7vw, 3.2rem)/1.1 var(--font-title); margin: 0 0 1rem; letter-spacing: -.01em; }
+    .todo { background: rgba(230, 176, 106, .38); padding: .05em .45em; border-radius: 6px; font-weight: 500; }
+
+    /* Pied de page */
+    footer { background: var(--deep); color: #e7dfd4; padding: 1.6rem 0; font-size: .9rem; }
+    footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem 1.4rem; }
+    footer nav { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; }
+    footer .credit { flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: .15rem 1.2rem; margin: 0; }
+    footer .credit a { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+    footer a { text-decoration: none; opacity: .85; }
+    footer a:hover, footer a:focus-visible, footer a[aria-current] { opacity: 1; text-decoration: underline; }
+  </style>
+</head>
+
+<body>
+  <header class="bar">
+    <div class="wrap">
+      <a class="brand" href="index.html">L’Aparté</a>
+      <a class="back" href="index.html">← Retour au site</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <h1>Mentions légales</h1>
+      <p>Contenu à venir : <span class="todo">[à compléter]</span></p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <nav aria-label="Informations légales">
+        <a href="mentions-legales.html" aria-current="page">Mentions légales</a>
+        <a href="politique-de-confidentialite.html">Politique de confidentialité</a>
+      </nav>
+      <p class="credit">
+        <span>Réalisé par <strong>Maxime Prigent</strong></span>
+        <span>Contact : <a href="mailto:maxime.prigent.dev.web@gmail.com">maxime.prigent.dev.web@gmail.com</a></span>
+      </p>
+      <span>Maquette d’aperçu — non définitive</span>
+    </div>
+  </footer>
+</body>
+</html>
