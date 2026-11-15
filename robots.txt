@@ -1,0 +1,7 @@
+# Le site peut etre explore et reference par les moteurs de recherche.
+# TODO CONTENU : remplacer « [À REMPLACER : URL DU SITE] » par l'adresse du site, sans « / » final (ex. https://www.exemple.fr).
+# Voir NOTES-INSTALLATION.md, rubrique « Lancement ».
+User-agent: *
+Allow: /
+
+Sitemap: [À REMPLACER : URL DU SITE]/sitemap.xml

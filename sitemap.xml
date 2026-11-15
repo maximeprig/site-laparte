@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- TODO CONTENU : remplacer « [À REMPLACER : URL DU SITE] » par l’adresse du site, sans « / » final (ex. https://www.exemple.fr).
+       Voir NOTES-INSTALLATION.md, rubrique « Lancement ». -->
+  <url>
+    <loc>[À REMPLACER : URL DU SITE]/</loc>
+  </url>
+  <url>
+    <loc>[À REMPLACER : URL DU SITE]/mentions-legales.html</loc>
+  </url>
+</urlset>
