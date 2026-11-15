@@ -4,90 +4,152 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="only light">
-  <!-- Aperçu privé : ne pas indexer -->
-  <meta name="robots" content="noindex">
   <meta name="theme-color" content="#23272b">
-  <title>Mentions légales – L’Aparté</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231a7ea6'/%3E%3Ctext x='32' y='47' font-family='Georgia,serif' font-size='42' font-weight='700' text-anchor='middle' fill='white'%3EA%3C/text%3E%3C/svg%3E">
+  <title data-en="Legal notice – L’Aparté">Mentions légales – L’Aparté</title>
+  <meta name="description" content="Mentions légales du site du restaurant L’Aparté à Hérouville-Saint-Clair : éditeur, hébergeur, conception, données personnelles." data-en-content="Legal notice for the website of the L’Aparté restaurant in Hérouville-Saint-Clair: publisher, host, design, personal data.">
 
   <!--
-    PAGE VIDE POUR L’INSTANT : les mentions légales sont à fournir
-    par le restaurant avant la mise en ligne. Écrire le contenu
-    dans <main>, à la place de « [à compléter] ».
+    ============================================================
+    MENTIONS LÉGALES — même style et mêmes boutons de langue que la page d’accueil.
+    • Contenus manquants : chercher « À REMPLACER » (texte visible) et « TODO CONTENU » (commentaires).
+      Liste complète : CONTENUS-A-REMPLACER.md.
+    • Le français est dans le HTML, l’anglais dans les attributs data-en… (voir script.js, section 1).
+    • Texte de départ rédigé d’après les informations fournies : à faire relire par le restaurant
+      (et, si besoin, par son comptable ou un juriste) avant la mise en ligne.
+    ============================================================
   -->
+
+  <!-- TODO CONTENU : ADRESSE DU SITE. Remplacer « [À REMPLACER : URL DU SITE] » comme dans index.html. -->
+  <link rel="canonical" href="[À REMPLACER : URL DU SITE]/mentions-legales.html">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <script>
+    (function () {
+      var r = document.documentElement;
+      r.classList.add('js');
+      try {
+        if (localStorage.getItem('laparte-lang') === 'en') {
+          r.lang = 'en';
+          r.classList.add('i18n-attente');
+          setTimeout(function () { r.classList.remove('i18n-attente'); }, 2500);
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght,SOFT@9..144,600..800,100&display=swap" rel="stylesheet">
-
-  <style>
-    /* Mêmes couleurs et polices que la page d’accueil */
-    :root {
-      --bg: #fbf6ee; --ink: #22201e; --muted: #665d55;
-      --deep: #23272b; --gold: #e6b06a;
-      --font-title: "Fraunces", Georgia, serif;
-      --font-text: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    body {
-      margin: 0; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column;
-      font-family: var(--font-text); font-size: 1.05rem; line-height: 1.6;
-      color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased;
-    }
-    a { color: inherit; }
-    a:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
-    .wrap { width: min(820px, 100% - 2.5rem); margin-inline: auto; }
-
-    /* En-tête */
-    .bar { background: var(--deep); color: #fff; }
-    .bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; }
-    .brand { font: 800 1.6rem var(--font-title); color: var(--gold); text-decoration: none; }
-    .back { font-weight: 500; font-size: .95rem; text-decoration: none; }
-    .back:hover, .back:focus-visible { text-decoration: underline; }
-
-    /* Contenu */
-    main { flex: 1; padding: 4rem 0 5rem; }
-    h1 { font: 700 clamp(2rem, 7vw, 3.2rem)/1.1 var(--font-title); margin: 0 0 1rem; letter-spacing: -.01em; }
-    .todo { background: rgba(230, 176, 106, .38); padding: .05em .45em; border-radius: 6px; font-weight: 500; }
-
-    /* Pied de page */
-    footer { background: var(--deep); color: #e7dfd4; padding: 1.6rem 0; font-size: .9rem; }
-    footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem 1.4rem; }
-    footer nav { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; }
-    footer .credit { flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: .15rem 1.2rem; margin: 0; }
-    footer .credit a { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
-    footer a { text-decoration: none; opacity: .85; }
-    footer a:hover, footer a:focus-visible, footer a[aria-current] { opacity: 1; text-decoration: underline; }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <header class="bar">
-    <div class="wrap">
-      <a class="brand" href="index.html">L’Aparté</a>
-      <a class="back" href="index.html">← Retour au site</a>
+  <a class="skip" href="#contenu" data-en="Skip to content">Aller au contenu</a>
+
+  <header class="site-header">
+    <a class="brand" href="index.html">L’Aparté</a>
+    <a class="retour" href="index.html" data-en="← Home">← Accueil</a>
+    <div class="lang-switch" role="group" aria-label="Langue / Language">
+      <button type="button" data-lang-btn="fr" aria-pressed="true" lang="fr" aria-label="Français (FR)">FR</button>
+      <button type="button" data-lang-btn="en" aria-pressed="false" lang="en" aria-label="English (EN)">EN</button>
     </div>
   </header>
 
-  <main>
-    <div class="wrap">
-      <h1>Mentions légales</h1>
-      <p>Contenu à venir : <span class="todo">[à compléter]</span></p>
+  <main id="contenu" tabindex="-1">
+    <section class="prive dark legal-hero">
+      <div class="wrap">
+        <span class="eyebrow" data-en="Legal information">Informations légales</span>
+        <h1 data-en="Legal notice">Mentions légales</h1>
+      </div>
+    </section>
+
+    <div class="legal-page">
+      <div class="wrap">
+        <p class="legal-intro" data-en="In accordance with French law on trust in the digital economy (LCEN), here is the legal information about this website.">Conformément à la loi pour la confiance dans l’économie numérique (LCEN), voici les informations légales relatives à ce site.</p>
+
+        <!-- TODO CONTENU : ÉDITEUR. Connu : ANCASA, adresse, SIRET, téléphone, e-mail. À fournir par le restaurant : forme juridique
+             et capital social, RCS, numéro de TVA, nom du directeur de la publication. -->
+        <article class="legal-bloc">
+          <h2 data-en="Website publisher">Éditeur du site</h2>
+          <dl class="legal-champs">
+            <div class="legal-champ"><dt data-en="Company">Société</dt><dd>ANCASA</dd></div>
+            <div class="legal-champ"><dt data-en="Restaurant">Établissement</dt><dd>L’Aparté</dd></div>
+            <div class="legal-champ"><dt data-en="Legal form and share capital">Forme juridique et capital social</dt><dd><span class="todo">[À REMPLACER : forme juridique et capital social]</span></dd></div>
+            <div class="legal-champ"><dt data-en="Address">Adresse</dt><dd>1 avenue de la 3e Division d’Infanterie Britannique, 14200 Hérouville-Saint-Clair</dd></div>
+            <div class="legal-champ"><dt data-en="SIRET number">Numéro SIRET</dt><dd>991&nbsp;304&nbsp;452&nbsp;00014</dd></div>
+            <div class="legal-champ"><dt data-en="Trade and companies register (RCS)">Registre du commerce (RCS)</dt><dd><span class="todo">[À REMPLACER : ville et numéro du RCS]</span></dd></div>
+            <div class="legal-champ"><dt data-en="VAT number">N° de TVA intracommunautaire</dt><dd><span class="todo">[À REMPLACER : numéro de TVA]</span></dd></div>
+            <div class="legal-champ"><dt data-en="Phone">Téléphone</dt><dd><a href="tel:+33231949711" data-en="+33 2 31 94 97 11">02&nbsp;31&nbsp;94&nbsp;97&nbsp;11</a></dd></div>
+            <div class="legal-champ"><dt>E-mail</dt><dd><a href="mailto:restau.laparte@gmail.com">restau.laparte@gmail.com</a></dd></div>
+            <div class="legal-champ"><dt data-en="Publication director">Directeur de la publication</dt><dd><span class="todo">[À REMPLACER : nom du directeur de la publication]</span></dd></div>
+          </dl>
+        </article>
+
+        <article class="legal-bloc">
+          <h2 data-en="Hosting">Hébergeur</h2>
+          <dl class="legal-champs">
+            <div class="legal-champ"><dt data-en="Company">Société</dt><dd>Netlify, Inc.</dd></div>
+            <div class="legal-champ"><dt data-en="Address">Adresse</dt><dd><span data-en="101 2nd Street, San Francisco, CA 94105, United States">101 2nd Street, San Francisco, CA 94105, États-Unis</span></dd></div>
+            <div class="legal-champ"><dt data-en="Website">Site web</dt><dd><a href="https://www.netlify.com" target="_blank" rel="noopener">www.netlify.com</a></dd></div>
+          </dl>
+        </article>
+
+        <article class="legal-bloc">
+          <h2 data-en="Design and development">Conception et réalisation</h2>
+          <p data-en="This website was designed and developed by Maxime Prigent.">Ce site a été conçu et réalisé par Maxime Prigent.</p>
+          <p><span data-en="Contact:">Contact :</span> <a href="mailto:maxime.prigent.dev.web@gmail.com">maxime.prigent.dev.web@gmail.com</a></p>
+        </article>
+
+        <!-- TODO CONTENU : CRÉDITS PHOTOS. Indiquer l’auteur (photographe, agence, restaurant…) ou la source de chaque photo du dossier
+             images/. Si ce sont les photos du restaurant : « Photographies : © L’Aparté ». Ne rien affirmer tant que ce n’est pas vérifié. -->
+        <article class="legal-bloc">
+          <h2 data-en="Credits">Crédits</h2>
+          <dl class="legal-champs">
+            <div class="legal-champ"><dt data-en="Photographs">Photographies</dt><dd><span class="todo">[À REMPLACER : crédits photos, auteur ou source de chaque photo]</span></dd></div>
+            <div class="legal-champ"><dt data-en="Fonts">Polices de caractères</dt><dd data-en="Fraunces and DM Sans, served by Google Fonts (SIL Open Font License 1.1).">Fraunces et DM Sans, servies par Google Fonts (licence SIL Open Font License 1.1).</dd></div>
+            <div class="legal-champ"><dt data-en="Icons">Icônes</dt><dd data-en="Lucide and Feather icon sets (ISC and MIT licences).">Jeux d’icônes libres Lucide et Feather (licences ISC et MIT).</dd></div>
+          </dl>
+        </article>
+
+        <article class="legal-bloc">
+          <h2 data-en="Personal data and cookies">Données personnelles et cookies</h2>
+          <p data-en="This website does not collect any personal data: there is no form, no customer account, no audience-measurement tool and no advertising. The site itself uses no tracking cookie.">Ce site ne collecte aucune donnée personnelle : il n’y a ni formulaire, ni compte client, ni outil de mesure d’audience, ni publicité. Le site lui-même n’utilise aucun cookie de suivi.</p>
+          <p data-en="Only your language choice (FR or EN) is saved in your browser (local storage), so that you do not have to make it again on your next visit. This information stays on your device and is never sent to the restaurant.">Seul votre choix de langue (FR ou EN) est enregistré dans votre navigateur (stockage local), pour ne pas avoir à le refaire à la visite suivante. Cette information reste sur votre appareil et n’est jamais transmise au restaurant.</p>
+          <p data-en="To work, the site uses Google services: fonts (Google Fonts), the map (Google Maps) and the reading of the menu of the day (Google Sheets). Your browser then contacts Google’s servers, which receive in particular your IP address, and the Google Maps map may set its own cookies. The restaurant has no access to this information. More details: Google’s privacy policy (policies.google.com/privacy).">Pour fonctionner, le site fait appel à des services de Google : les polices de caractères (Google Fonts), le plan d’accès (Google Maps) et la lecture du menu du jour (Google Sheets). Votre navigateur contacte alors les serveurs de Google, qui reçoivent notamment votre adresse IP, et le plan Google Maps peut déposer ses propres cookies. Le restaurant n’a pas accès à ces informations. Pour en savoir plus : politique de confidentialité de Google (policies.google.com/privacy).</p>
+          <p data-en="If you contact us by email or phone, your details are used only to answer you. In accordance with the GDPR, you have the right to access, correct and delete your data: restau.laparte@gmail.com.">Si vous nous contactez par e-mail ou par téléphone, vos coordonnées servent uniquement à vous répondre. Conformément au RGPD, vous disposez d’un droit d’accès, de rectification et de suppression de vos données : restau.laparte@gmail.com.</p>
+        </article>
+
+        <article class="legal-bloc">
+          <h2 data-en="Intellectual property">Propriété intellectuelle</h2>
+          <p data-en="The texts, photographs and graphic elements of this website are protected by copyright. Any reproduction, even partial, without the publisher’s written consent is prohibited, unless otherwise stated.">Les textes, photographies et éléments graphiques de ce site sont protégés par le droit d’auteur. Toute reproduction, même partielle, sans l’accord écrit de l’éditeur est interdite, sauf mention contraire.</p>
+        </article>
+
+        <!-- TODO CONTENU : MÉDIATEUR DE LA CONSOMMATION. Obligatoire pour un commerce qui vend à des particuliers : le restaurant
+             doit indiquer le nom et les coordonnées du médiateur auquel il adhère (renseignements : son comptable ou sa fédération professionnelle). -->
+        <article class="legal-bloc">
+          <h2 data-en="Consumer mediation">Médiation de la consommation</h2>
+          <p data-en="In the event of a dispute, customers may use a consumer mediator free of charge, in accordance with the French Consumer Code.">En cas de litige, le client peut recourir gratuitement à un médiateur de la consommation, conformément au Code de la consommation.</p>
+          <p><span data-en="Mediator:">Médiateur :</span> <span class="todo">[À REMPLACER : nom, adresse et site internet du médiateur]</span></p>
+        </article>
+      </div>
     </div>
   </main>
 
-  <footer>
+  <footer class="sans-barre">
     <div class="wrap">
-      <nav aria-label="Informations légales">
-        <a href="mentions-legales.html" aria-current="page">Mentions légales</a>
-        <a href="politique-de-confidentialite.html">Politique de confidentialité</a>
-      </nav>
-      <p class="credit">
-        <span>Réalisé par <strong>Maxime Prigent</strong></span>
-        <span>Contact : <a href="mailto:maxime.prigent.dev.web@gmail.com">maxime.prigent.dev.web@gmail.com</a></span>
-      </p>
-      <span>Maquette d’aperçu — non définitive</span>
+      <div class="foot-bottom">
+        <a href="index.html"><svg class="ico" aria-hidden="true" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-en="Back to the site">Retour au site</span></a>
+        <p class="foot-credit">
+          <span>© <span data-annee>2026</span> L’Aparté</span>
+          <span><span data-en="Website by">Réalisé par</span> <strong>Maxime Prigent</strong></span>
+        </p>
+      </div>
     </div>
   </footer>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
