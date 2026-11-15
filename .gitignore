@@ -4,9 +4,10 @@
 # Papier à imprimer pour le restaurant (document de travail, pas pour le public)
 a-imprimer/
 
-# Menu du jour : mode d’emploi du restaurateur et notes d’installation (documents de travail, pas pour le public)
+# Documents de travail : mode d’emploi du menu du jour, notes d’installation, liste des contenus à remplacer (pas pour le public)
 GUIDE-PLAT-DU-JOUR.md
 NOTES-INSTALLATION.md
+CONTENUS-A-REMPLACER.md
 
 # Photos d'origine : lourdes et inutiles au site (il utilise images/*.jpg optimisées)
 images/originaux/
