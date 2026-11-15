@@ -1,3 +1,16 @@
+/* ============================================================
+   L’APARTÉ — feuille de style (index.html et mentions-legales.html)
+   ------------------------------------------------------------
+   • Charte graphique : variables CSS de la section 0 (couleurs, polices).
+   • Mobile d’abord : les règles de base valent pour un téléphone, les
+     @media (min-width: …) les adaptent aux écrans plus larges.
+   • Sections : 0 Variables · 1 Base · 2 Barres fixes · 3 Haut de page ·
+     4 Points forts · 5 Présentation · 6 Menu du jour et carte ·
+     7 Privatisation · 8 Galerie · 9 Avis · 10 Horaires et plan ·
+     11 Pied de page · 12 Animations · 13-14 Tailles d’écran ·
+     15 Choix de la langue · 16 Galerie dès 560 px · 17 Mentions légales.
+   ============================================================ */
+
 /* =========================================================
    0. VARIABLES — la charte graphique se règle ici
    Couleurs tirées des photos : turquoise des chaises et du
@@ -84,6 +97,11 @@ section { padding: 4.5rem 0; scroll-margin-top: 4.5rem; }
 }
 .skip:focus { top: 1rem; }
 
+/* Page en anglais mémorisée : le contenu attend sa traduction (on ne voit pas le français une fraction de seconde) */
+.i18n-attente body { visibility: hidden; }
+/* Image introuvable : on garde le fond neutre du cadre, jamais d’image cassée ni de texte alternatif affiché */
+img.img-absente { visibility: hidden; }
+
 /* Boutons */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
@@ -109,7 +127,7 @@ section { padding: 4.5rem 0; scroll-margin-top: 4.5rem; }
    - mobile : bouton d’appel en bas
    ========================================================= */
 .topbar {
-  position: fixed; inset: 0 0 auto 0; z-index: 60; display: none; align-items: center; gap: 2rem;
+  position: fixed; inset: 0 0 auto 0; z-index: 60; display: none; align-items: center; gap: 1.2rem;
   padding: .8rem max(1.25rem, calc((100% - 1120px) / 2));
   background: rgba(35, 39, 43, .92); color: #fff;
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
@@ -117,7 +135,7 @@ section { padding: 4.5rem 0; scroll-margin-top: 4.5rem; }
   transition: transform .4s var(--ease), visibility .4s;
 }
 .topbar .brand { margin-right: auto; font: 800 1.5rem var(--font-title); text-decoration: none; color: var(--gold); }
-.topbar ul { display: flex; gap: 1.6rem; list-style: none; margin: 0; padding: 0; }
+.topbar ul { display: flex; gap: clamp(.9rem, 1.5vw, 1.6rem); list-style: none; margin: 0; padding: 0; }
 .topbar ul a {
   text-decoration: none; font-weight: 500; font-size: .95rem; opacity: .85; padding: .3rem 0;
   border-bottom: 2px solid transparent; transition: opacity .2s, border-color .2s;
@@ -163,6 +181,7 @@ section { padding: 4.5rem 0; scroll-margin-top: 4.5rem; }
 .hero-photo {                               /* mobile : en haut, fondue vers le bas */
   position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: -3; margin: 0;
   width: min(100%, 480px); aspect-ratio: 3 / 4;
+  background: #3a4046;                        /* fond neutre si la photo est absente */
   -webkit-mask-image: linear-gradient(#000 0%, #000 55%, transparent 98%);
   mask-image: linear-gradient(#000 0%, #000 55%, transparent 98%);
 }
@@ -219,9 +238,9 @@ section { padding: 4.5rem 0; scroll-margin-top: 4.5rem; }
 .person p { margin: 0; color: var(--muted); font-size: .98rem; line-height: 1.45; }
 
 /* =========================================================
-   6. LA CARTE
+   6. MENU DU JOUR ET CARTE
    ========================================================= */
-.carte { background: var(--bg-alt); }
+.carte, .menu-section { background: var(--bg-alt); }
 .formule {
   position: relative; overflow: hidden; display: grid; gap: .8rem; align-items: center;
   margin-bottom: 1.2rem; padding: 1.8rem 1.6rem; border-radius: var(--radius);
@@ -240,26 +259,31 @@ section { padding: 4.5rem 0; scroll-margin-top: 4.5rem; }
 .formule h3 { font-size: clamp(1.6rem, 5vw, 2.3rem); margin: 0; }
 .formule-price { font: 800 clamp(3.2rem, 14vw, 4.8rem)/1 var(--font-title); color: var(--gold); white-space: nowrap; }
 
+/* La carte : une fiche par catégorie (Entrées, Plats, Desserts, Boissons). Une ligne de plat = nom ····· prix, puis
+   en option une courte description (modèle à copier : voir « TODO CONTENU » dans index.html). */
 .carte-grid { display: grid; gap: 1.2rem; }
-.menu-stack { display: grid; gap: 1.2rem; align-content: start; }
 .menu-card {
   display: flex; flex-direction: column; padding: 1.5rem 1.4rem;
   background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 6px 18px rgba(34, 32, 30, .06);
 }
 .menu-card header { display: flex; align-items: center; gap: .85rem; margin-bottom: .6rem; }
 .menu-card h3 { font-size: 1.4rem; margin: 0; }
-.menu-card .note { display: block; font-size: .88rem; color: var(--muted); }
-.menu-card header .price { margin-left: auto; }
-.menu-list { list-style: none; margin: 0; padding: 0; flex: 1; display: flex; flex-direction: column; }
-.menu-list li { flex: 1; display: flex; align-items: center; gap: .75rem; padding: .75rem 0; border-top: 1px dashed var(--line); font-weight: 500; }
+.menu-list { list-style: none; margin: 0; padding: 0; }
+.menu-list li { padding: .8rem 0; border-top: 1px dashed var(--line); font-weight: 500; }
 .menu-list li:first-child { border-top: 0; }
-.menu-list .ico { color: var(--accent); width: 1.4rem; height: 1.4rem; }
-.leader { flex: 1; border-bottom: 2px dotted rgba(34, 32, 30, .25); transform: translateY(.3em); }
+.menu-list li.sous-titre { padding: 1.2rem 0 .3rem; border-top: 0; font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-dark); }
+.menu-list li.sous-titre:first-child { padding-top: .3rem; }
+.item-ligne { display: flex; align-items: baseline; gap: .7rem; }
+.item-nom { min-width: 0; overflow-wrap: anywhere; }
+.item-prix { flex: none; font-weight: 700; white-space: nowrap; }
+.item-desc { margin: .25rem 0 0; font-size: .93rem; font-weight: 400; line-height: 1.45; color: var(--muted); }
+.leader { flex: 1 1 1rem; min-width: .8rem; border-bottom: 2px dotted rgba(34, 32, 30, .25); }
 
 /* Menu du jour : texte lu dans une feuille Google Sheets (script « MENU DU JOUR », en bas de page).
    Trois états, un seul visible à la fois : .mj-chargement (attente), .mj-liste (le menu) et
    .mj-secours (texte de secours : visible par défaut, donc aussi sans JavaScript). */
-.menu-jour { margin-bottom: 1.2rem; background: #fff; border-top: 4px solid var(--accent); scroll-margin-top: 5rem; }
+.menu-jour { margin-bottom: 1.2rem; background: #fff; border-top: 4px solid var(--accent); }
+.menu-section .formule { margin-bottom: 0; }
 .menu-jour [hidden] { display: none !important; }   /* l’attribut hidden doit toujours gagner sur les « display » ci-dessous */
 .mj-liste { display: grid; margin: 0; }
 .mj-ligne { padding: .85rem 0; }
@@ -288,6 +312,7 @@ section { padding: 4.5rem 0; scroll-margin-top: 4.5rem; }
 .prive .eyebrow { color: var(--gold); }
 .prive .lead { color: rgba(255, 255, 255, .82); }
 .prive .small { margin: 1.1rem 0 0; font-size: .95rem; opacity: .85; }
+.prive-actions { display: flex; flex-wrap: wrap; gap: .7rem; }   /* appeler + écrire */
 .events { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
 .events li {
   display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.3rem; border-radius: var(--radius);
@@ -298,10 +323,14 @@ section { padding: 4.5rem 0; scroll-margin-top: 4.5rem; }
 .events .badge { background: rgba(230, 176, 106, .18); color: var(--gold); }
 
 /* =========================================================
-   8. GALERIE (3 photos)
+   8. GALERIE (6 photos : une grande, cinq petites)
+   Téléphone : 2 colonnes, la 1re photo et la dernière sur toute la
+   largeur. Dès 560 px : voir la section 16.
    ========================================================= */
-.galerie-grid { display: grid; gap: 1rem; }
-.shot { position: relative; margin: 0; overflow: hidden; aspect-ratio: 4 / 3; border-radius: var(--radius); background: #cfc7bb; box-shadow: var(--shadow); }
+.galerie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+.galerie-grid .shot:first-child, .galerie-grid .shot:last-child:nth-child(even) { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+.shot { position: relative; margin: 0; overflow: hidden; aspect-ratio: 1; border-radius: var(--radius); background: #cfc7bb; box-shadow: var(--shadow); }
+.shot img.pos-bas { object-position: center 55%; }   /* photo en hauteur : on garde l’assiette */
 .shot img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease); }
 .shot:hover img { transform: scale(1.05); }
 .shot figcaption {
@@ -376,6 +405,8 @@ section { padding: 4.5rem 0; scroll-margin-top: 4.5rem; }
 .avis-card figcaption strong, .avis-card figcaption small { display: block; }
 .avis-card figcaption small { margin-top: .15rem; color: var(--muted); font-size: .85rem; }
 .avis-card .badge { font: 700 1rem var(--font-title); letter-spacing: .02em; }   /* initiales du client */
+.avis-note { margin: 0; font-size: .88rem; opacity: .9; }
+@media (min-width: 800px) { .avis-note { margin-top: 1.4rem; } }
 
 @media (max-width: 799px) {                 /* rangée qui défile : les cartes restent visibles (pas d’apparition au scroll) */
   .js .avis-list .reveal, .js .avis-list .reveal.visible { opacity: 1; animation: none; }
@@ -414,7 +445,7 @@ footer a { font-weight: 700; color: #fff; }
 .foot-legal { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; }
 .foot-credit { flex: 1 0 100%; display: flex; flex-wrap: wrap; gap: .15rem 1.2rem; margin: 0; }
 .foot-credit a { display: inline; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
-.foot-note { flex: 1 0 100%; opacity: .75; }
+footer .lang-switch { margin-top: .9rem; }
 
 /* =========================================================
    12. ANIMATIONS (apparition au scroll)
@@ -444,9 +475,6 @@ footer a { font-weight: 700; color: #fff; }
   .tagline { margin-inline: auto; }
   .actions, .hero-hours { justify-content: center; }
   .actions .btn { flex: 0 0 auto; }
-  .galerie-grid { grid-template-columns: 1fr 1fr; }
-  .galerie-grid .shot { aspect-ratio: 4 / 5; }
-  .galerie-grid .shot:first-child { grid-column: 1 / -1; aspect-ratio: 16 / 9; }
 }
 
 /* =========================================================
@@ -457,8 +485,7 @@ footer a { font-weight: 700; color: #fff; }
   .ribbon ul { grid-template-columns: repeat(4, 1fr); padding: 1.6rem 0; }
   .formule { grid-template-columns: 1fr auto; padding: 2.2rem 2.6rem; }
   .carte-grid { grid-template-columns: 1fr 1fr; align-items: stretch; }
-  .galerie-grid { grid-template-columns: 1.35fr 1fr 1fr; height: 430px; }
-  .shot, .galerie-grid .shot { aspect-ratio: auto; }
+  .carte-grid .menu-card--plats { grid-column: 2; grid-row: 1 / span 3; }   /* « Plats » : grande fiche à droite ; entrées, desserts et boissons empilés à gauche */
   .foot-grid { grid-template-columns: 1.2fr 1fr 1fr; }
   .avis-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin: 0; padding: 0; overflow: visible; }
   .avis-card { box-shadow: 0 18px 40px rgba(0, 0, 0, .2); }
@@ -530,4 +557,84 @@ footer a { font-weight: 700; color: #fff; }
   html { font-size: 118%; }
   .wrap, .hero-grid { width: min(1320px, 100% - 2.5rem); }
   .topbar { padding-inline: max(1.25rem, calc((100% - 1320px) / 2)); }
+  .hero > .lang-switch { right: max(1rem, calc((100% - 1320px) / 2)); }
+}
+
+/* Barre de navigation étroite (900 à 1019 px) : on retire le nom du restaurant pour que tout tienne sur une ligne */
+@media (min-width: 900px) and (max-width: 1019px) {
+  .topbar .brand { display: none; }
+  .topbar ul { margin-right: auto; }
+}
+
+/* =========================================================
+   15. CHOIX DE LA LANGUE (FR | EN)
+   Même bouton dans le haut de page, la barre de navigation, le pied de
+   page et les pages secondaires. Caché sans JavaScript (il ne servirait à rien).
+   ========================================================= */
+.lang-switch {
+  display: inline-flex; flex: none; gap: 2px; padding: 3px;
+  background: rgba(35, 39, 43, .82); border: 1px solid rgba(255, 255, 255, .35); border-radius: 999px;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.lang-switch button {
+  min-width: 48px; min-height: 44px; padding: 0 .75rem; border: 0; border-radius: 999px;
+  background: transparent; color: #fff; font: 700 .9rem/1 var(--font-text); letter-spacing: .06em; cursor: pointer;
+  transition: background-color .2s, color .2s;
+}
+.lang-switch button:hover { background: rgba(255, 255, 255, .18); }
+.lang-switch button[aria-pressed="true"] { background: var(--gold); color: var(--deep); cursor: default; }
+.lang-switch button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.lang-switch button[aria-pressed="true"]:focus-visible { outline-color: #fff; }
+html:not(.js) .lang-switch { display: none; }
+.hero > .lang-switch { position: absolute; top: max(.8rem, env(safe-area-inset-top)); right: max(1rem, calc((100% - 1120px) / 2)); z-index: 3; }
+.topbar .lang-switch button { min-height: 36px; min-width: 44px; padding-inline: .6rem; }
+@media (max-width: 359px) { .lang-switch button { min-width: 44px; padding-inline: .55rem; } }
+@media (prefers-reduced-motion: reduce) { .lang-switch button { transition: none; } }
+
+/* =========================================================
+   16. GALERIE DÈS 560 px : une grande photo + cinq petites (3 colonnes)
+   ========================================================= */
+@media (min-width: 560px) {
+  .galerie-grid { grid-template-columns: repeat(3, 1fr); grid-auto-rows: clamp(130px, 22vw, 240px); gap: 1rem; }
+  .galerie-grid .shot, .galerie-grid .shot:first-child, .galerie-grid .shot:last-child:nth-child(even) { aspect-ratio: auto; grid-column: auto; }
+  .galerie-grid .shot:first-child { grid-column: span 2; grid-row: span 2; }
+}
+
+/* =========================================================
+   17. MENTIONS LÉGALES (mentions-legales.html)
+   Barre du haut toujours visible, bandeau de titre (réutilise le style
+   « .prive »), puis une carte blanche par rubrique.
+   ========================================================= */
+.site-header {
+  display: flex; align-items: center; gap: .8rem; padding: .6rem max(1rem, calc((100% - 1120px) / 2));
+  background: var(--deep); color: #fff;
+}
+.site-header .brand { margin-right: auto; font: 800 1.5rem var(--font-title); text-decoration: none; color: var(--gold); }
+.site-header .retour {
+  display: inline-flex; align-items: center; min-height: 44px; padding-inline: .3rem;
+  font-size: .95rem; font-weight: 500; text-decoration: none; opacity: .92;
+}
+.site-header .retour:hover, .site-header .retour:focus-visible { text-decoration: underline; opacity: 1; }
+.legal-hero { padding: 3.2rem 0 2.8rem; }
+.legal-hero h1 { font-size: clamp(2.4rem, 9vw, 4rem); font-weight: 800; margin: 0; }
+.legal-page { background: var(--bg); padding: 3rem 0 4rem; }
+.legal-intro { max-width: 70ch; margin-bottom: 1.8rem; color: var(--muted); }
+.legal-bloc {
+  margin-bottom: 1.2rem; padding: 1.5rem 1.4rem;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 6px 18px rgba(34, 32, 30, .06);
+}
+.legal-bloc h2 { font-size: 1.5rem; font-weight: 700; margin: 0 0 .7rem; }
+.legal-bloc p { max-width: 70ch; }
+.legal-bloc p:last-child { margin-bottom: 0; }
+.legal-bloc a { color: var(--accent-dark); text-underline-offset: 3px; overflow-wrap: anywhere; }
+.legal-champs { display: grid; margin: .8rem 0 0; }
+.legal-champ { display: grid; gap: .1rem 1.2rem; padding: .6rem 0; border-top: 1px dashed var(--line); }
+.legal-champ:first-child { border-top: 0; }
+.legal-champ dt { font-size: .82rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.legal-champ dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+footer.sans-barre { padding: 2rem 0 3rem; }   /* pas de bouton d’appel fixe sur cette page */
+footer.sans-barre .foot-bottom { margin-top: 0; padding-top: 0; border-top: 0; }
+@media (min-width: 640px) {
+  .legal-bloc { padding: 1.8rem 2rem; }
+  .legal-champ { grid-template-columns: 15rem 1fr; align-items: baseline; }
 }
