@@ -1,112 +1,188 @@
 /* ============================================================
-   Script du site L’Aparté : comportements de la page, puis menu du jour
-   (lu dans une feuille Google Sheets). Chargé par index.html.
+   Script du site L’Aparté — pages index.html et mentions-legales.html
+   ------------------------------------------------------------
+   0. Menu du jour : adresse de la feuille Google Sheets (juste en dessous)
+   1. Langue FR / EN (choix mémorisé dans le navigateur)
+   2. Comportements de la page (apparition, barres fixes, navigation, année)
+   3. Haut de page : arrière-plan flou tiré de la photo de façade
+   4. Menu du jour : lecture de la feuille et affichage
+   Aucune bibliothèque externe.
    ============================================================ */
 
-(() => {
-  const root = document.documentElement;
+/* ► MENU DU JOUR — ADRESSE DE LA FEUILLE GOOGLE SHEETS (TODO CONTENU)
+   À remplacer par le lien CSV obtenu avec Fichier > Partager > Publier sur le web >
+   « Valeurs séparées par des virgules (.csv) » (pas à pas : NOTES-INSTALLATION.md).
+   Tant que la valeur reste « À_REMPLACER », le site affiche le texte de secours
+   (« Appelez-nous… ») à la place du menu. */
+const SHEET_CSV_URL = "À_REMPLACER";
 
-  /* 1. Apparition douce des blocs au scroll (décalage progressif entre frères) */
+
+/* ======================= 1. LANGUE FR / EN =======================
+   Le français est écrit dans le HTML (c’est ce que voient les moteurs de recherche et les visiteurs
+   sans JavaScript). La version anglaise est portée par des attributs « data-en… » :
+     data-en="…"               remplace le texte de l’élément (l’élément ne doit contenir aucune autre balise)
+     data-en-alt / -aria-label / -title / -content / -href="…"   remplacent l’attribut du même nom
+   Les boutons FR | EN (attribut data-lang-btn) changent la langue ; le choix est gardé dans localStorage. */
+(() => {
+  const racine = document.documentElement;
+  const CLE = 'laparte-lang';
+  const ATTRIBUTS = ['alt', 'aria-label', 'title', 'content', 'href'];
+
+  /* localStorage peut être refusé (navigation privée, stockage bloqué) : le site fonctionne sans */
+  const lireChoix = () => { try { return localStorage.getItem(CLE); } catch (e) { return null; } };
+  const garderChoix = (lang) => { try { localStorage.setItem(CLE, lang); } catch (e) { /* tant pis : le choix ne sera pas retenu */ } };
+
+  /* On mémorise le français d’origine AVANT toute traduction, pour pouvoir y revenir */
+  const elements = [];
+  document.querySelectorAll('[data-en]').forEach((el) => {
+    elements.push({ el, attribut: null, fr: el.textContent, en: el.getAttribute('data-en') });
+  });
+  ATTRIBUTS.forEach((attribut) => {
+    document.querySelectorAll('[data-en-' + attribut + ']').forEach((el) => {
+      elements.push({ el, attribut, fr: el.getAttribute(attribut), en: el.getAttribute('data-en-' + attribut) });
+    });
+  });
+  const boutons = [...document.querySelectorAll('[data-lang-btn]')];
+
+  const appliquer = (lang) => {
+    elements.forEach(({ el, attribut, fr, en }) => {
+      const texte = lang === 'en' ? en : fr;
+      if (attribut) el.setAttribute(attribut, texte); else el.textContent = texte;
+    });
+    racine.lang = lang;                                         /* lecteurs d’écran, césure, guillemets… */
+    boutons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.langBtn === lang)));
+    racine.classList.remove('i18n-attente');                    /* la page peut s’afficher */
+  };
+
+  boutons.forEach((b) => b.addEventListener('click', () => {
+    const lang = b.dataset.langBtn === 'en' ? 'en' : 'fr';
+    appliquer(lang);
+    garderChoix(lang);
+  }));
+
+  appliquer(lireChoix() === 'en' ? 'en' : 'fr');
+})();
+
+
+/* ======================= 2. COMPORTEMENTS DE LA PAGE ======================= */
+(() => {
+  const racine = document.documentElement;
+
+  /* Année du pied de page (le HTML contient déjà l’année de mise en ligne) */
+  document.querySelectorAll('[data-annee]').forEach((el) => { el.textContent = new Date().getFullYear(); });
+
+  /* Apparition douce des blocs au scroll (décalage progressif entre frères) */
   const items = [...document.querySelectorAll('.reveal')];
   if (!('IntersectionObserver' in window)) {
-    items.forEach(el => el.classList.add('visible'));
-  } else {
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => {
+    items.forEach((el) => el.classList.add('visible'));
+  } else if (items.length) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
         if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-    items.forEach(el => {
-      const siblings = [...el.parentNode.children].filter(n => n.classList.contains('reveal'));
-      el.style.setProperty('--d', siblings.indexOf(el) * 90 + 'ms');
+    items.forEach((el) => {
+      const freres = [...el.parentNode.children].filter((n) => n.classList.contains('reveal'));
+      el.style.setProperty('--d', freres.indexOf(el) * 90 + 'ms');
       io.observe(el);
     });
   }
 
-  /* 2. Barres fixes : visibles dès que le bouton « Réserver » du haut de page est sorti de l’écran */
+  /* Barres fixes : visibles dès que le bouton « Réserver » du haut de page est sorti de l’écran */
   const actions = document.querySelector('.hero .actions');
-  let ticking = false;
-  const update = () => {
-    ticking = false;
-    root.classList.toggle('past-hero', actions.getBoundingClientRect().bottom < 40);
-  };
-  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
-  addEventListener('resize', update);
-  update();
+  if (actions) {
+    let attente = false;
+    const maj = () => {
+      attente = false;
+      racine.classList.toggle('past-hero', actions.getBoundingClientRect().bottom < 40);
+    };
+    addEventListener('scroll', () => { if (!attente) { attente = true; requestAnimationFrame(maj); } }, { passive: true });
+    addEventListener('resize', maj);
+    maj();
+  }
 
-  /* 3. Lien actif dans la navigation (ordinateur) */
-  const links = {};
-  document.querySelectorAll('.topbar ul a[href^="#"]').forEach(a => { links[a.getAttribute('href').slice(1)] = a; });
-  if ('IntersectionObserver' in window) {
-    const spy = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        const link = links[e.target.id];
-        if (!link) return;
+  /* Lien actif dans la navigation (ordinateur) */
+  const liens = {};
+  document.querySelectorAll('.topbar ul a[href^="#"]').forEach((a) => { liens[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window && Object.keys(liens).length) {
+    const espion = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        const lien = liens[e.target.id];
+        if (!lien) return;
         if (e.isIntersecting) {
-          Object.values(links).forEach(a => a.removeAttribute('aria-current'));
-          link.setAttribute('aria-current', 'true');
+          Object.values(liens).forEach((a) => a.removeAttribute('aria-current'));
+          lien.setAttribute('aria-current', 'true');
         } else {
-          link.removeAttribute('aria-current');   /* la section quitte la zone centrale (ex. retour en haut de page) */
+          lien.removeAttribute('aria-current');   /* la section quitte la zone centrale (ex. retour en haut de page) */
         }
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
-    Object.keys(links).forEach(id => { const s = document.getElementById(id); if (s) spy.observe(s); });
+    Object.keys(liens).forEach((id) => { const s = document.getElementById(id); if (s) espion.observe(s); });
   }
 
-  /* 4. Rangée d’avis : atteignable au clavier seulement quand elle défile (mobile / tablette) */
-  const avisList = document.querySelector('.avis-list');
-  if (avisList) {
-    const syncAvis = () => {
-      if (avisList.scrollWidth > avisList.clientWidth + 1) avisList.setAttribute('tabindex', '0');
-      else avisList.removeAttribute('tabindex');
+  /* Rangée d’avis : atteignable au clavier seulement quand elle défile (mobile / tablette) */
+  const avis = document.querySelector('.avis-list');
+  if (avis) {
+    const synchroniser = () => {
+      if (avis.scrollWidth > avis.clientWidth + 1) avis.setAttribute('tabindex', '0');
+      else avis.removeAttribute('tabindex');
     };
-    addEventListener('resize', syncAvis);
-    syncAvis();
+    addEventListener('resize', synchroniser);
+    synchroniser();
   }
 })();
 
-/* ======================= MENU DU JOUR (Google Sheets) =======================
- Lit une feuille Google Sheets publiée en CSV et remplit le bloc « Menu du jour » de la section
- Carte. Installation : NOTES-INSTALLATION.md · mode d’emploi du restaurateur : GUIDE-PLAT-DU-JOUR.md */
-/* ► ADRESSE DE LA FEUILLE : à coller entre les guillemets ci-dessous (lien CSV obtenu avec
-     Fichier > Partager > Publier sur le web > « Valeurs séparées par des virgules (.csv) »).
-   Tant que la valeur reste « À_REMPLACER », le texte de secours (appel téléphonique) s’affiche. */
-const SHEET_CSV_URL = "À_REMPLACER";
 
+/* ======================= 3. HAUT DE PAGE : ARRIÈRE-PLAN FLOU =======================
+   L’arrière-plan est une mini-version de la photo de façade, agrandie par le navigateur (donc floue, sans
+   filtre coûteux). Elle est recalculée ici à partir de images/facade.jpg : quand la photo change, rien à refaire.
+   Si le calcul est impossible (photo absente, page ouverte depuis un fichier), le CSS garde images/facade-flou.jpg. */
+(() => {
+  const fond = document.querySelector('.hero-bg');
+  const photo = document.querySelector('.hero-photo img');
+  if (!fond || !photo) return;
+
+  const flouter = () => {
+    if (!photo.naturalWidth) return;                            /* photo absente : fond neutre du CSS */
+    try {
+      const CIBLE = 24;                                         /* largeur finale, en pixels */
+      let source = photo, l = photo.naturalWidth, h = photo.naturalHeight;
+      do {                                                      /* on divise par deux à chaque passe : résultat plus doux */
+        const nl = Math.max(CIBLE, Math.round(l / 2));
+        const nh = Math.max(1, Math.round(h * nl / l));
+        const toile = document.createElement('canvas');
+        toile.width = nl; toile.height = nh;
+        toile.getContext('2d').drawImage(source, 0, 0, nl, nh);
+        source = toile; l = nl; h = nh;
+      } while (l > CIBLE);
+      fond.style.backgroundImage = 'url("' + source.toDataURL('image/jpeg', 0.8) + '")';
+    } catch (erreur) { /* canvas bloqué : on garde le fond du CSS */ }
+  };
+
+  if (photo.complete) flouter(); else photo.addEventListener('load', flouter, { once: true });
+})();
+
+
+/* ======================= 4. MENU DU JOUR (Google Sheets) =======================
+ Lit la feuille Google Sheets publiée en CSV (adresse : SHEET_CSV_URL, tout en haut) et remplit le bloc
+ « Menu du jour » de index.html. Installation : NOTES-INSTALLATION.md · mode d’emploi du restaurateur :
+ GUIDE-PLAT-DU-JOUR.md.
+ La feuille : ligne 1 = titres des colonnes (entree, plat, dessert, entree_en, plat_en, dessert_en),
+ ligne 2 = le menu du jour. Les colonnes sont repérées par leur titre, jamais par leur position. */
 (() => {
   const NON_CONFIGURE = 'À_REMPLACER';
   const DELAI_MAX = 8000;     /* ms : sans réponse après ce délai, on affiche le texte de secours */
 
-  /* Tous les textes du bloc, en français et en anglais.
-     (Le HTML contient déjà la version française : c’est ce qui s’affiche sans JavaScript.) */
-  const TEXTES = {
-    fr: {
-      titre: 'Menu du jour', entree: 'Entrée', plat: 'Plat', dessert: 'Dessert',
-      chargement: 'Chargement du menu du jour…',
-      secours: 'Le menu du jour change chaque jour. Appelez-nous au 02 31 94 97 11 pour le connaître.',
-      appeler: 'Nous appeler'
-    },
-    en: {
-      titre: 'Menu of the day', entree: 'Starter', plat: 'Main course', dessert: 'Dessert',
-      chargement: 'Loading the menu of the day…',
-      secours: 'Our menu of the day changes daily. Call us on +33 2 31 94 97 11.',
-      appeler: 'Call us'
-    }
-  };
-
-  const bloc = document.getElementById('menu-du-jour');
+  const section = document.getElementById('menu-du-jour');
+  const bloc = section && section.querySelector('.menu-jour');
   const vue = bloc && {
-    titre: bloc.querySelector('#mj-titre'),
     chargement: bloc.querySelector('.mj-chargement'),
-    attente: bloc.querySelector('.mj-sr'),
     liste: bloc.querySelector('.mj-liste'),
     lignes: [...bloc.querySelectorAll('.mj-ligne')],
-    secours: bloc.querySelector('.mj-secours'),
-    secoursTexte: bloc.querySelector('.mj-secours p'),
-    secoursBouton: bloc.querySelector('.mj-secours .btn span')
+    secours: bloc.querySelector('.mj-secours')
   };
   /* HTML modifié par erreur : on ne touche à rien, le texte de secours du HTML reste affiché */
-  if (!vue || !vue.lignes.length || Object.values(vue).some((v) => !v)) return;
+  if (!vue || !vue.chargement || !vue.liste || !vue.secours || !vue.lignes.length) return;
 
   /* Ce qui est affiché : 'chargement', 'menu' (données dans « menu ») ou 'secours' */
   let etat = { vue: 'secours', menu: null };
@@ -160,7 +236,6 @@ const SHEET_CSV_URL = "À_REMPLACER";
     .trim().toLowerCase().replace(/\s+/g, '_');
 
   /* Ligne 1 = titres, ligne 2 = menu du jour (le reste de la feuille est ignoré).
-     Les colonnes sont repérées par leur titre, jamais par leur position.
      Renvoie null si les trois cases françaises sont vides. */
   const lireMenu = (lignesCsv) => {
     if (lignesCsv.length < 2) return null;
@@ -186,24 +261,19 @@ const SHEET_CSV_URL = "À_REMPLACER";
     return { texte: donnees.fr, lang: 'fr' };
   };
 
+  /* Les libellés fixes (« Entrée », texte de secours, bouton…) sont traduits par la section 1 (data-en) :
+     ici on ne gère que l’état affiché et le texte venant de la feuille. */
   const afficher = () => {
     const lang = langue();
-    const t = TEXTES[lang];
     bloc.setAttribute('aria-busy', etat.vue === 'chargement' ? 'true' : 'false');
-    vue.titre.textContent = t.titre;
-    vue.attente.textContent = t.chargement;
-    vue.secoursTexte.textContent = t.secours;
-    vue.secoursBouton.textContent = t.appeler;
     vue.chargement.hidden = etat.vue !== 'chargement';
     vue.liste.hidden = etat.vue !== 'menu';
     vue.secours.hidden = etat.vue !== 'secours';
     if (etat.vue !== 'menu') return;
 
     vue.lignes.forEach((ligne) => {
-      const nom = ligne.dataset.col;
-      const choix = choisirTexte(etat.menu[nom], lang);
+      const choix = choisirTexte(etat.menu[ligne.dataset.col], lang);
       const dd = ligne.querySelector('dd');
-      ligne.querySelector('dt').textContent = t[nom];
       /* textContent : le texte de la feuille n’est jamais interprété comme du HTML (équivalent d’un échappement) */
       dd.textContent = choix.texte;
       if (choix.lang !== lang) dd.setAttribute('lang', choix.lang); else dd.removeAttribute('lang');   /* français dans une page anglaise */
@@ -238,7 +308,7 @@ const SHEET_CSV_URL = "À_REMPLACER";
 
   charger();
 
-  /* Si un sélecteur de langue change l’attribut lang de la page, le bloc suit (sans recharger la feuille) */
+  /* Quand la langue change (boutons FR | EN), le menu suit sans recharger la feuille */
   if ('MutationObserver' in window) {
     new MutationObserver(afficher).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
   }
